@@ -18,6 +18,7 @@ class _leilaoHomeState extends State<leilaoHome> {
     super.initState();
     _enterprisesFuture = _service.getAllEnterprise();
   }
+  
     @override
     Widget build(BuildContext context) {
       return Scaffold(

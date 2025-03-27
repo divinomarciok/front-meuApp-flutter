@@ -1,14 +1,14 @@
 class Enterprise {
   final int id;
   final String name;
-  final String addres;
+  final String address;
   final String cep;
   final String cnpj;
 
   Enterprise({
     required this.id,
     required this.name,
-    required this.addres,
+    required this.address,
     required this.cep,
     required this.cnpj,
   });
@@ -17,7 +17,7 @@ class Enterprise {
     return Enterprise(
       id: json['id'],
       name: json['name'],
-      addres: json['addres'],
+      address: json['address'],
       cep: json['cep'],
       cnpj: json['cnpj'],
     );
