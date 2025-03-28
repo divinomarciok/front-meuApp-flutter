@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:front_leilaorv/service/fetchEnterprises.dart';
+import 'package:front_leilaorv/service/fetchPriceList.dart';
+import '../models/enterprise.dart';
 
 class leilaoHome extends StatefulWidget {
   const leilaoHome({super.key});
@@ -7,6 +10,18 @@ class leilaoHome extends StatefulWidget {
 }
 
 class _leilaoHomeState extends State<leilaoHome> {
+  late Future<dynamic> _enterprisesFuture;
+  final PriceListService _service = PriceListService();
+  late int id = 3;
+  late String authorization =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibG9naW4iOiJhY2Vyb2xhIiwiaWF0IjoxNzQzMTMwNTcyLCJleHAiOjE3NDMxMzQxNzJ9.OlutSdqenxh3c11eUFZrhocLNV3mHUSoAc3baIK9ZMU";
+
+  @override
+  void initState() {
+    super.initState();
+    _enterprisesFuture = _service.getAllPriceListId(id, authorization);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
