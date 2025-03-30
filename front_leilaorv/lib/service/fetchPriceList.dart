@@ -1,15 +1,15 @@
 import 'dart:convert';
-import 'package:front_leilaorv/models/prices.dart';
+//import 'package:front_leilaorv/models/prices.dart';
 
 import '../models/price_list.dart';
 import 'package:dio/dio.dart';
 
 class PriceListService {
-  Future<List<PriceList>> getAllPriceListId(int id, String authorization ) async {
-    var headers = {
-      'Authorization':
-          'Beraer $authorization',
-    };
+  Future<List<PriceList>> getAllPriceListId(
+    int id,
+    String authorization,
+  ) async {
+    var headers = {'Authorization': 'Beraer $authorization'};
     var dio = Dio();
     var response = await dio.request(
       'http://localhost:8000/priceList/$id',
@@ -27,9 +27,8 @@ class PriceListService {
       return pricelistId;
     } else {
       print(response.statusMessage);
-
     }
 
-   return throw Exception('Falha em carregar as empresas');
+    return throw Exception('Falha em carregar as empresas');
   }
 }

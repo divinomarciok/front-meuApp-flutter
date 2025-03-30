@@ -8,6 +8,8 @@ class PriceList {
   final String? weigth;
   final String img_url;
 
+  var length;
+
   PriceList({
     required this.nameProd,
     required this.mark,
