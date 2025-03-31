@@ -25,6 +25,12 @@ class _leilaoHomeState extends State<leilaoHome> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                child: Text('SUPER PROMOÇÕES', textAlign: TextAlign.left),
+              ),
+            ),
             SizedBox(
               height: 300,
               child: ListView.builder(
@@ -50,10 +56,13 @@ class _leilaoHomeState extends State<leilaoHome> {
 
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Nome: Produto \nPreço: 10.00 \nMarca:Generico Simples \nMercado:Conquista",
-                              maxLines: 5,
-                              overflow: TextOverflow.ellipsis,
+                            child: Center(
+                              child: Text(
+                                "Nome: Produto \nPreço: 10.00 \nMarca:Generico Simples \nMercado:Conquista",
+                                maxLines: 5,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
                         ],
@@ -76,12 +85,59 @@ class _leilaoHomeState extends State<leilaoHome> {
                 physics: NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: gridColumns, // Adaptativo
-                  childAspectRatio: 0.6, // Melhor proporção para celular
-                  crossAxisSpacing: 10,
+                  childAspectRatio: 0.7, // Melhor proporção para celular
+                  crossAxisSpacing: 5,
                   mainAxisSpacing: 10,
                 ),
                 itemCount: 12,
                 itemBuilder: (context, index) {
+                  final fontSize =
+                      MediaQuery.of(context).size.width < 800 ? 12.0 : 14.0;
+
+                  /* return Card(
+                    elevation: 3,
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        // Calcula tamanhos baseados no espaço disponível
+                        final cardWidth = constraints.maxWidth;
+                        final imageHeight =
+                            cardWidth * 0.60; // 80% do card para imagem
+                        final textHeight =
+                            cardWidth * 0.40; // 20% do card para texto
+                        final fontSize =
+                            cardWidth < 100 ? 9.0 : 12.0; // Ajuste de fonte
+
+                        return Column(
+                          children: [
+                            SizedBox(
+                              height: imageHeight,
+                              width: double.infinity,
+                              child: Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: Image.network(
+                                  'https://cdn.iset.io/assets/60955/produtos/452/abacate.png',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: textHeight,
+                              width: double.infinity,
+                              child: Center(
+                                child: Text(
+                                  "Nome: Produto \nPreço: 10.00 \nMarca:Generico Simples \nMercado:Conquista",
+                                  style: TextStyle(fontSize: fontSize),
+                                  maxLines: 5,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  );*/
+
                   return Card(
                     elevation: 3,
                     child: Column(
@@ -96,14 +152,16 @@ class _leilaoHomeState extends State<leilaoHome> {
                           ),
                         ),
                         // Texto
-                        Padding(
-                          padding: const EdgeInsets.all(1.0),
-                          child: Text(
-                            "Nome: Produto \nPreço: 10.00 \nMarca:Generico Simples \nMercado:Conquista",
-                            style: TextStyle(fontSize: 14),
-                            maxLines: 5,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
+                        Expanded(
+                          //padding: const EdgeInsets.all(0.0),
+                          child: Center(
+                            child: Text(
+                              "Nome: Produto \nPreço: 10.00 \nMarca:Generico Simples \nMercado:Conquista",
+                              style: TextStyle(fontSize: fontSize),
+                              maxLines: 5,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
                       ],
