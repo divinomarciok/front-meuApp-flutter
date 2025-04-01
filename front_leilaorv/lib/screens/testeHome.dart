@@ -128,6 +128,7 @@ class _leilaoHomeState extends State<leilaoHome> {
                             ),
                           ),
                           // Texto
+                          
                           Expanded(
                             //padding: const EdgeInsets.all(0.0),
                             child: Center(
@@ -147,35 +148,6 @@ class _leilaoHomeState extends State<leilaoHome> {
                 },
               ),
             ),
-            /*Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: gridColumns,
-                  childAspectRatio: 0.8,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemCount: 8,
-                itemBuilder: (context, index) {
-                  return Card(
-                    elevation: 3,
-                    child: Column(
-                      children: [
-                        // Imagem
-                        AspectRatio(
-                          aspectRatio: 1.0,
-                          child: Image.network(
-                            'https://cdn.iset.io/assets/60955/produtos/452/abacate.png',
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),*/
           ],
         ),
       ),
