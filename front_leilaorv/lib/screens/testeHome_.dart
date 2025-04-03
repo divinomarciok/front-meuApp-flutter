@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/enterprise.dart';
+//import '../models/enterprise.dart';
 import '../screens/priceList.dart';
 
 class leilaoHome extends StatefulWidget {
@@ -128,7 +128,7 @@ class _leilaoHomeState extends State<leilaoHome> {
                             ),
                           ),
                           // Texto
-                          
+
                           Expanded(
                             //padding: const EdgeInsets.all(0.0),
                             child: Center(

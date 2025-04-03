@@ -29,6 +29,6 @@ class PriceListService {
       print(response.statusMessage);
     }
 
-    return throw Exception('Falha em carregar as empresas');
+    return throw Exception('Falha em carregar as price list');
   }
 }

@@ -39,17 +39,13 @@ class _product_priceList extends State<product_priceList> {
                   child: Center(
                     child: SizedBox(
                       //width: double.infinity,
-                      width: 650,
+                      width: 600,
                       child: ElevatedButton(
                         onPressed: () {},
                         child: Text('Adiciona Preço Produto'),
                       ),
                     ),
                   ),
-                  //  child: ElevatedButton(
-                  //    onPressed: () {},
-                  //    child: Text("teste"),
-                  //  ),
                 ),
 
                 Center(
