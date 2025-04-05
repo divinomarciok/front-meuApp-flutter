@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front_leilaorv/service/fetchLogin.dart';
 import 'package:front_leilaorv/service/fetchProduct.dart';
 import '../screens/priceList.dart';
 import '../models/products.dart';
@@ -10,17 +11,31 @@ class leilaoHome extends StatefulWidget {
   State<StatefulWidget> createState() => _leilaoHomeState();
 }
 
-late Future<List<Product>> productFuture;
+//late Future<List<Product>> productFuture;
+//late Future<String> authorizaation;
 
 class _leilaoHomeState extends State<leilaoHome> {
-  late Future<List<Product>> _productFuture;
+  // late Future<String> _authorization;
+  late String _authorization;
+  late Future<List<Product>> _productFuture = Future.value([]);
+
+  final LoginService _loginService = LoginService();
   final ProductService _productService = ProductService();
+
   late String authorization =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibG9naW4iOiJhY2Vyb2xhIiwiaWF0IjoxNzQzODA3MjE1LCJleHAiOjE3NDM4MTA4MTV9.wkfeRx1v36mV7IDUDK3dMrQ_vTIFJg753zYDMSrlznw";
 
+  Future<void> _initData() async {
+    _authorization = await _loginService.returnLogin("acerola", "123456");
+    print("Auth Home : $_authorization");
+    _productFuture = _productService.getAllProduct(_authorization);
+
+    setState(() {}); // Atualiza a interface, se necessário
+  }
+
   @override
   void initState() {
-    _productFuture = _productService.getAllProduct(authorization);
+    _initData();
     super.initState();
   }
 
@@ -76,7 +91,10 @@ class _leilaoHomeState extends State<leilaoHome> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => product_priceList(id:productList?[index].id),
+                                  builder:
+                                      (context) => product_priceList(
+                                        id: productList![index].id,
+                                      ),
                                 ),
                               );
                             },
@@ -149,7 +167,10 @@ class _leilaoHomeState extends State<leilaoHome> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => product_priceList(),
+                                builder:
+                                    (context) => product_priceList(
+                                      id: productList![index].id,
+                                    ),
                               ),
                             );
                           },

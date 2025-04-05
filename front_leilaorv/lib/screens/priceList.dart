@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class product_priceList extends StatefulWidget {
-  const product_priceList({super.key});
+  final String id;
+  const product_priceList({super.key, required this.id});
   @override
   State<StatefulWidget> createState() => _product_priceList();
 }
 
 class _product_priceList extends State<product_priceList> {
-  final String id;
   @override
   Widget build(BuildContext context) {
     // TODO: implement build

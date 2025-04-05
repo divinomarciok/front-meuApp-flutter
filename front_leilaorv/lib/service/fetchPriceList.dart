@@ -5,6 +5,7 @@ import '../models/price_list.dart';
 import 'package:dio/dio.dart';
 
 class PriceListService {
+
   Future<List<PriceList>> getAllPriceListId(
     int id,
     String authorization,
@@ -23,7 +24,7 @@ class PriceListService {
           (response.data as List)
               .map((item) => PriceList.fromJson(item))
               .toList();
-
+ 
       return pricelistId;
     } else {
       print(response.statusMessage);

@@ -43,12 +43,12 @@ class _leilaoHomeState extends State<leilaoHome> {
                     width: 180,
                     child: InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => product_priceList(),
-                          ),
-                        );
+                       // Navigator.push(
+                          //context,
+                          //MaterialPageRoute(
+                          //  builder: (context) => product_priceList(),
+                          //),
+                       // );
                       },
                       child: Card(
                         child: Column(
@@ -107,12 +107,12 @@ class _leilaoHomeState extends State<leilaoHome> {
 
                   return InkWell(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => product_priceList(),
-                        ),
-                      );
+                     // Navigator.push(
+                     //   context,
+                     //   MaterialPageRoute(
+                     //     builder: (context) => product_priceList(),
+                     //   ),
+                     // );
                     },
                     child: Card(
                       elevation: 3,
