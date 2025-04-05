@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/enterprise.dart';
+//import '../models/enterprise.dart';
 import '../screens/priceList.dart';
 
 class leilaoHome extends StatefulWidget {
@@ -43,12 +43,12 @@ class _leilaoHomeState extends State<leilaoHome> {
                     width: 180,
                     child: InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => product_priceList(),
-                          ),
-                        );
+                       // Navigator.push(
+                          //context,
+                          //MaterialPageRoute(
+                          //  builder: (context) => product_priceList(),
+                          //),
+                       // );
                       },
                       child: Card(
                         child: Column(
@@ -107,12 +107,12 @@ class _leilaoHomeState extends State<leilaoHome> {
 
                   return InkWell(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => product_priceList(),
-                        ),
-                      );
+                     // Navigator.push(
+                     //   context,
+                     //   MaterialPageRoute(
+                     //     builder: (context) => product_priceList(),
+                     //   ),
+                     // );
                     },
                     child: Card(
                       elevation: 3,
@@ -128,7 +128,7 @@ class _leilaoHomeState extends State<leilaoHome> {
                             ),
                           ),
                           // Texto
-                          
+
                           Expanded(
                             //padding: const EdgeInsets.all(0.0),
                             child: Center(

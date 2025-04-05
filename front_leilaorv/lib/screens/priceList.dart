@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class product_priceList extends StatefulWidget {
-  const product_priceList({super.key});
-
+  final String id;
+  const product_priceList({super.key, required this.id});
   @override
   State<StatefulWidget> createState() => _product_priceList();
 }
@@ -39,17 +39,13 @@ class _product_priceList extends State<product_priceList> {
                   child: Center(
                     child: SizedBox(
                       //width: double.infinity,
-                      width: 650,
+                      width: 600,
                       child: ElevatedButton(
                         onPressed: () {},
                         child: Text('Adiciona Preço Produto'),
                       ),
                     ),
                   ),
-                  //  child: ElevatedButton(
-                  //    onPressed: () {},
-                  //    child: Text("teste"),
-                  //  ),
                 ),
 
                 Center(

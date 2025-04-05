@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:front_leilaorv/service/fetchEnterprises.dart';
-import '../models/enterprise.dart';
+//import 'package:front_leilaorv/service/fetchEnterprises.dart';
+//import '../models/enterprise.dart';
 
 class leilaoHome extends StatefulWidget {
   const leilaoHome({super.key});
