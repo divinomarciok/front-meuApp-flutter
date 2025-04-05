@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front_leilaorv/models/price_list.dart';
-//import 'package:front_leilaorv/service/fetchEnterprises.dart';
 import 'package:front_leilaorv/service/fetchPriceList.dart';
-//import '../models/enterprise.dart';
 
 class leilaoHome extends StatefulWidget {
   const leilaoHome({super.key});
@@ -60,8 +58,6 @@ class PriceListMock {
       }),
     ];
   }
-
-  // Initialize the Future in the constructor or initState
 }
 
 class _leilaoHomeState extends State<leilaoHome> {
@@ -75,11 +71,6 @@ class _leilaoHomeState extends State<leilaoHome> {
   void initializeMockData() {
     _enterprisesFuture = PriceListMock.getMockEnterprisesFuture();
   }
-  /*@override
-  void initState() {
-    super.initState();
-    _enterprisesFuture = _service.getAllPriceListId(id, authorization);
-  }*/
 
   @override
   Widget build(BuildContext context) {

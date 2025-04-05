@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:front_leilaorv/screens/testeHome_ copy.dart';
+import 'package:front_leilaorv/screens/Home_fetchApi.dart';
 
 void main() {
   runApp(const leilaoApp());

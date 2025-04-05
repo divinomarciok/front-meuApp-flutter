@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front_leilaorv/service/fetchProduct.dart';
 import 'package:front_leilaorv/models/products.dart';
-//import 'package:front_leilaorv/service/fetchEnterprises.dart';
-//import '../models/enterprise.dart';
 
 class leilaoHome extends StatefulWidget {
   const leilaoHome({super.key});
@@ -20,7 +18,6 @@ class _leilaoHomeState extends State<leilaoHome> {
 
   @override
   void initState() {
-    // TODO: implement initState
     _productFuture = _serviceProduct.getAllProduct(authorization);
     super.initState();
   }
