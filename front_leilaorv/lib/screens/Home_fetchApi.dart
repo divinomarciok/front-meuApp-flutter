@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front_leilaorv/service/fetchLogin.dart';
 import 'package:front_leilaorv/service/fetchProduct.dart';
-import '../screens/priceList.dart';
+import '../screens/priceList_api.dart';
 import '../models/products.dart';
 
 class leilaoHome extends StatefulWidget {
@@ -11,20 +11,14 @@ class leilaoHome extends StatefulWidget {
   State<StatefulWidget> createState() => _leilaoHomeState();
 }
 
-//late Future<List<Product>> productFuture;
-//late Future<String> authorizaation;
-
 class _leilaoHomeState extends State<leilaoHome> {
-  // late Future<String> _authorization;
   late String _authorization;
   late Future<List<Product>> _productFuture = Future.value([]);
 
   final LoginService _loginService = LoginService();
   final ProductService _productService = ProductService();
 
-  late String authorization =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibG9naW4iOiJhY2Vyb2xhIiwiaWF0IjoxNzQzODA3MjE1LCJleHAiOjE3NDM4MTA4MTV9.wkfeRx1v36mV7IDUDK3dMrQ_vTIFJg753zYDMSrlznw";
-
+  // O   initState não funciona async diretamente, necessario criar uma função assincrona para chamar dentro dele
   Future<void> _initData() async {
     _authorization = await _loginService.returnLogin("acerola", "123456");
     print("Auth Home : $_authorization");
@@ -94,6 +88,8 @@ class _leilaoHomeState extends State<leilaoHome> {
                                   builder:
                                       (context) => product_priceList(
                                         id: productList![index].id,
+                                        authorization: _authorization,
+                                        img_url: productList[index].img_url,
                                       ),
                                 ),
                               );
@@ -105,7 +101,6 @@ class _leilaoHomeState extends State<leilaoHome> {
                                   Padding(
                                     padding: const EdgeInsets.all(5),
                                     child: Image.network(
-                                      //'https://i1.wp.com/qrofertas.s3.us-west-2.amazonaws.com/imagens-ads/d0691886-4ea4-4e5b-bc76-ca1a9e680b38-modelo-de-encarte-4-tema-4159-pagina-1-art-82761.jpg?w=582',
                                       'http://localhost:8000/${productList?[index].img_url}',
                                       height: 150,
                                       width: double.infinity,
@@ -118,7 +113,6 @@ class _leilaoHomeState extends State<leilaoHome> {
                                     child: Center(
                                       child: Text(
                                         "${productList?[index].nome} \nMarca: ${productList?[index].marca} \nTamanho: ${productList?[index].tamanho} \nCategoria: ${productList?[index].categoria}",
-                                        //  "Nome: Produto \nPreço: 10.00 \nMarca:Generico Simples \nMercado:Conquista",
                                         maxLines: 5,
                                         overflow: TextOverflow.ellipsis,
                                         textAlign: TextAlign.center,
@@ -170,6 +164,8 @@ class _leilaoHomeState extends State<leilaoHome> {
                                 builder:
                                     (context) => product_priceList(
                                       id: productList![index].id,
+                                      authorization: _authorization,
+                                      img_url: productList[index].img_url,
                                     ),
                               ),
                             );

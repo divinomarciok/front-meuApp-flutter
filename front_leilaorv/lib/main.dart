@@ -10,7 +10,6 @@ class leilaoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return MaterialApp(
       title: "Leilão Rio Verde",
       theme: ThemeData(primarySwatch: Colors.lightGreen),

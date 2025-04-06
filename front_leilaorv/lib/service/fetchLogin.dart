@@ -1,10 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'dart:convert';
 
 class LoginService {
   Future<String> returnLogin(String login, String password) async {
-    // final String authorization = "";
 
     var headers = {'Content-Type': 'application/json'};
     var data = json.encode({"login": "acerola", "senha": "123456"});
