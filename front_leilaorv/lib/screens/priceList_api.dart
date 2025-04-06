@@ -3,7 +3,16 @@ import 'package:front_leilaorv/models/price_list.dart';
 import 'package:front_leilaorv/service/fetchPriceList.dart';
 
 class product_priceList extends StatefulWidget {
-  const product_priceList({super.key});
+  final String id;
+  final String authorization;
+  final String img_url;
+
+  const product_priceList({
+    super.key,
+    required this.id,
+    required this.authorization,
+    required String this.img_url,
+  });
   @override
   State<StatefulWidget> createState() => _product_priceList();
 }
@@ -14,13 +23,21 @@ class _product_priceList extends State<product_priceList> {
   late Future<List<PriceList>> _priceListFuture;
   PriceListService _priceListService = PriceListService();
 
-  late String authorization = "";
-  late int id;
+  late String authorization;
+  late String id;
+  late String imgUrl;
 
   @override
   void initState() {
     // TODO: implement initState
-    _priceListFuture = _priceListService.getAllPriceListId(id, authorization);
+    id = widget.id;
+    authorization = widget.authorization;
+    imgUrl = widget.img_url;
+
+    _priceListFuture = _priceListService.getAllPriceListId(
+      int.parse(id),
+      authorization,
+    );
     super.initState();
   }
 
@@ -45,7 +62,6 @@ class _product_priceList extends State<product_priceList> {
           if (!snapshot.hasData) {
             return Text("Sem dados price list");
           }
-
           final priceList = snapshot.data;
 
           return SingleChildScrollView(
@@ -62,7 +78,7 @@ class _product_priceList extends State<product_priceList> {
                       aspectRatio: 4.0,
                       child: Image.network(
                         height: 400,
-                        'https://cdn.iset.io/assets/60955/produtos/452/abacate.png',
+                        'http://localhost:8000/${imgUrl}',
                       ),
                     ),
                     Padding(
@@ -84,14 +100,16 @@ class _product_priceList extends State<product_priceList> {
                         height: 690,
                         width: 600,
                         child: ListView.builder(
-                          itemCount: 30,
+                          itemCount: priceList?.length,
                           itemBuilder: (context, index) {
                             return Card(
-                              // child: Card(
                               child: Column(
-                                children: [Text('teste \n teste \n teste')],
+                                children: [
+                                  Text(
+                                    ' Empresa : ${priceList?[index].enterprise} \nPreço : R\$:${priceList?[index].price} \nMedida : ${priceList?[index].weigth} ${priceList?[index].un} \nMarca : ${priceList?[index].mark}',
+                                  ),
+                                ],
                               ),
-                              // ),
                             );
                           },
                         ),
@@ -104,60 +122,6 @@ class _product_priceList extends State<product_priceList> {
           );
         },
       ),
-      /*SingleChildScrollView(
-        child: Container(
-          //color: Colors.cyan,
-          alignment: Alignment.center,
-          //height: 240,
-          child: Card(
-            elevation: 7,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AspectRatio(
-                  aspectRatio: 4.0,
-                  child: Image.network(
-                    height: 400,
-                    'https://cdn.iset.io/assets/60955/produtos/452/abacate.png',
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: SizedBox(
-                      //width: double.infinity,
-                      width: 600,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        child: Text('Adiciona Preço Produto'),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Center(
-                  child: SizedBox(
-                    height: 690,
-                    width: 600,
-                    child: ListView.builder(
-                      itemCount: 30,
-                      itemBuilder: (context, index) {
-                        return Card(
-                          // child: Card(
-                          child: Column(
-                            children: [Text('teste \n teste \n teste')],
-                          ),
-                          // ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),*/
     );
   }
 }
