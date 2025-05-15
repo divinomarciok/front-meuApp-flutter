@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:front_leilaorv/screens/Home_fetchApi.dart';
+import 'package:provider/provider.dart';
+import 'package:front_leilaorv/data/providers/product.provider.dart';
+import 'package:front_leilaorv/screens/home.dart';
 
 void main() {
-  runApp(const leilaoApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ProductProvider()),
+      ],
+      child: const leilaoApp(),
+    ),
+  );
 }
 
 class leilaoApp extends StatelessWidget {

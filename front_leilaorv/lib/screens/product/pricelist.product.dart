@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:front_leilaorv/models/price_list.dart';
-import 'package:front_leilaorv/service/fetchPriceList.dart';
+import 'package:front_leilaorv/models/pricelist.dart';
+import 'package:front_leilaorv/service/services.pricelist.dart';
 
 class product_priceList extends StatefulWidget {
   final String id;
   final String authorization;
-  final String img_url;
+  final String? img_url;
 
   const product_priceList({
     super.key,
     required this.id,
     required this.authorization,
-    required String this.img_url,
+    this.img_url,
   });
   @override
   State<StatefulWidget> createState() => _product_priceList();
@@ -29,10 +29,9 @@ class _product_priceList extends State<product_priceList> {
 
   @override
   void initState() {
-    // TODO: implement initState
     id = widget.id;
     authorization = widget.authorization;
-    imgUrl = widget.img_url;
+    imgUrl = widget.img_url!;
 
     _priceListFuture = _priceListService.getAllPriceListId(
       int.parse(id),
@@ -43,7 +42,6 @@ class _product_priceList extends State<product_priceList> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -66,9 +64,7 @@ class _product_priceList extends State<product_priceList> {
 
           return SingleChildScrollView(
             child: Container(
-              //color: Colors.cyan,
               alignment: Alignment.center,
-              //height: 240,
               child: Card(
                 elevation: 7,
                 child: Column(
@@ -78,7 +74,7 @@ class _product_priceList extends State<product_priceList> {
                       aspectRatio: 4.0,
                       child: Image.network(
                         height: 400,
-                        'http://localhost:8000/${imgUrl}',
+                        'http://localhost:8000/uploads/${imgUrl}',
                       ),
                     ),
                     Padding(
@@ -106,7 +102,7 @@ class _product_priceList extends State<product_priceList> {
                               child: Column(
                                 children: [
                                   Text(
-                                    ' Empresa : ${priceList?[index].enterprise} \nPreço : R\$:${priceList?[index].price} \nMedida : ${priceList?[index].weigth} ${priceList?[index].un} \nMarca : ${priceList?[index].mark}',
+                                    ' ${priceList?[index].enterprise.name} \nR\$:${priceList?[index].price} \n${priceList?[index].product.weigth} : ${priceList?[index].product.unidade_measure} \n${priceList?[index].product.mark}',
                                   ),
                                 ],
                               ),
