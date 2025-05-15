@@ -1,5 +1,5 @@
 import 'dart:convert';
-import '../models/price_list.dart';
+import '../models/pricelist.dart';
 import 'package:dio/dio.dart';
 
 class PriceListService {
@@ -11,11 +11,12 @@ class PriceListService {
     var dio = Dio();
     late Future<List<PriceList>> pricelistNull = Future.value([]);
     var response = await dio.request(
-      'http://localhost:8000/priceList/$id',
+      'http://localhost:8000/api/pricelists/product/$id',
       options: Options(method: 'GET', headers: headers),
     );
 
     if (response.statusCode == 200) {
+      
       print(json.encode(response.data));
 
       List<PriceList> pricelistId =

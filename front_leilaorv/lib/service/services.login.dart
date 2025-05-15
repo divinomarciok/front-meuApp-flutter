@@ -3,12 +3,11 @@ import 'dart:convert';
 
 class LoginService {
   Future<String> returnLogin(String login, String password) async {
-
     var headers = {'Content-Type': 'application/json'};
-    var data = json.encode({"login": "acerola", "senha": "123456"});
+    var data = json.encode({"login": login, "senha": password});
     var dio = Dio();
     var response = await dio.request(
-      'http://localhost:8000/login',
+      'http://localhost:8000/api/login',
       options: Options(method: 'POST', headers: headers),
       data: data,
     );
