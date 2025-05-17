@@ -4,6 +4,8 @@ import 'package:front_leilaorv/data/providers/product.provider.dart';
 import 'package:front_leilaorv/data/providers/pricelist.provider.dart';
 import 'package:front_leilaorv/models/pricelist.dart';
 import 'product/screen.pricelist.product.dart';
+import 'enterprise/screen.add.enterprise.dart';
+import '../screens/product/screen.add.product.dart';
 
 class leilaoHome extends StatefulWidget {
   const leilaoHome({super.key});
@@ -68,12 +70,33 @@ class _leilaoHomeState extends State<leilaoHome> {
           // Menu de opções
           PopupMenuButton<String>(
             onSelected: (value) {
+              final authorization =
+                  Provider.of<ProductProvider>(
+                    context,
+                    listen: false,
+                  ).authorization;
+
               switch (value) {
                 case 'add_product':
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) =>
+                              AddProductScreen(authorization: authorization),
+                    ),
+                  );
                   // Navegar para adicionar produto
                   break;
                 case 'add_company':
-                  // Navegar para adicionar empresa
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) =>
+                              AddCompanyScreen(authorization: authorization),
+                    ),
+                  );
                   break;
                 case 'logout':
                   // Implementar logout

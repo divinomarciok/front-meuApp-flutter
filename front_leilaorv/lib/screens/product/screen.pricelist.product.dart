@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front_leilaorv/models/pricelist.dart';
 import 'package:front_leilaorv/service/services.pricelist.dart';
+import './screen.addprice.product.dart';
 
 class product_priceList extends StatefulWidget {
   final String id;
@@ -81,10 +82,36 @@ class _product_priceList extends State<product_priceList> {
                       padding: const EdgeInsets.all(8.0),
                       child: Center(
                         child: SizedBox(
-                          //width: double.infinity,
                           width: 600,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) => AddPriceScreen(
+                                        productId: id,
+                                        authorization: authorization,
+                                        productName:
+                                            priceList?.isNotEmpty == true
+                                                ? priceList![0].product.name
+                                                : "Produto",
+                                        productImage: imgUrl,
+                                      ),
+                                ),
+                              );
+
+                              // Se retornou com sucesso, recarrega os preços
+                              if (result == true) {
+                                setState(() {
+                                  _priceListFuture = _priceListService
+                                      .getAllPriceListId(
+                                        int.parse(id),
+                                        authorization,
+                                      );
+                                });
+                              }
+                            },
                             child: Text('Adiciona Preço Produto'),
                           ),
                         ),
