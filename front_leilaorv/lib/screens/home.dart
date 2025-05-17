@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:front_leilaorv/data/providers/product.provider.dart';
-import 'product/pricelist.product.dart';
+import 'product/screen.pricelist.product.dart';
 
 class leilaoHome extends StatefulWidget {
   const leilaoHome({super.key});
