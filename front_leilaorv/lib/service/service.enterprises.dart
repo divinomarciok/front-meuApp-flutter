@@ -3,14 +3,15 @@ import '../models/enterprise.dart';
 import 'package:dio/dio.dart';
 
 class EnterpriseService {
-  Future<List<Enterprise>> getAllEnterprise() async {
+
+  Future<List<Enterprise>> getAllEnterprise (String authorization) async {
     var headers = {
       'Authorization':
-          'Beraer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibG9naW4iOiJhY2Vyb2xhIiwiaWF0IjoxNzQzMTAxOTQ4LCJleHAiOjE3NDMxMDU1NDh9.sBfG-IAcUmW14iBOy8HiMMqJIitb5N9mbn1tlA_dCFM ',
+          'Beraer $authorization',
     };
     var dio = Dio();
     var response = await dio.request(
-      'http://localhost:8000/getEnterprises',
+      'http://localhost:8000/api/enterprises',
       options: Options(method: 'GET', headers: headers),
     );
 
@@ -26,7 +27,39 @@ class EnterpriseService {
     } else {
       print(response.statusMessage);
     }
-    return throw Exception('Falha em carregar as empresas');
+    return throw Exception('Falha em criar  empresas');
+  }
 
+  Future<Enterprise> addEnterprise(
+    String authorization,
+    String name,
+    String address,
+    String cep,
+    String cnpj,
+  ) async {
+    var headers = {
+      'Authorization': 'Bearer $authorization',
+      'Content-Type': 'application/json',
+    };
+    var data = json.encode({
+      "name": name,
+      "address": address,
+      "cep": cep,
+      "cnpj": cnpj,
+    });
+    var dio = Dio();
+    var response = await dio.request(
+      'http://localhost:8000/api/enterprises',
+      options: Options(method: 'POST', headers: headers),
+      data: data,
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print(json.encode(response.data));
+      return Enterprise.fromJson(response.data);
+    } else {
+      print(response.statusMessage);
+      throw Exception('Falha ao adicionar empresa: ${response.statusMessage}');
+    }
   }
 }
