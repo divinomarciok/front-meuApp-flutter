@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:front_leilaorv/data/providers/auth.provider.dart';
 import 'package:front_leilaorv/models/pricelist.dart';
 import 'package:front_leilaorv/service/services.pricelist.dart';
+import 'package:provider/provider.dart';
 import './screen.addprice.product.dart';
 
 class product_priceList extends StatefulWidget {
   final String id;
-  final String authorization;
   final String? img_url;
+  
 
   const product_priceList({
     super.key,
-    required this.id,
-    required this.authorization,
+    required this.id,   
     this.img_url,
   });
   @override
@@ -24,21 +25,22 @@ class _product_priceList extends State<product_priceList> {
   late Future<List<PriceList>> _priceListFuture;
   PriceListService _priceListService = PriceListService();
 
-  late String authorization;
+  late String token;
+
   late String id;
   late String imgUrl;
 
   @override
   void initState() {
+    super.initState();
     id = widget.id;
-    authorization = widget.authorization;
     imgUrl = widget.img_url!;
+    token = Provider.of<AuthProvider>(context, listen: false).token;
 
     _priceListFuture = _priceListService.getAllPriceListId(
       int.parse(id),
-      authorization,
+      token,
     );
-    super.initState();
   }
 
   @override
@@ -91,7 +93,7 @@ class _product_priceList extends State<product_priceList> {
                                   builder:
                                       (context) => AddPriceScreen(
                                         productId: id,
-                                        authorization: authorization,
+                                        authorization: token,
                                         productName:
                                             priceList?.isNotEmpty == true
                                                 ? priceList![0].product.name
@@ -107,7 +109,7 @@ class _product_priceList extends State<product_priceList> {
                                   _priceListFuture = _priceListService
                                       .getAllPriceListId(
                                         int.parse(id),
-                                        authorization,
+                                        token,
                                       );
                                 });
                               }

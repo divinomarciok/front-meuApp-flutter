@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:front_leilaorv/data/providers/auth.provider.dart';
+import 'package:front_leilaorv/service/service.token.storage.dart';
 import 'package:provider/provider.dart';
 import 'package:front_leilaorv/data/providers/product.provider.dart';
 import 'package:front_leilaorv/data/providers/pricelist.provider.dart';
@@ -16,6 +18,7 @@ class leilaoHome extends StatefulWidget {
 
 class _leilaoHomeState extends State<leilaoHome> {
   final TextEditingController _searchController = TextEditingController();
+  late String token;
   bool _isSearchVisible = false;
   List<dynamic> _filteredProducts = [];
   bool _isSearching = false;
@@ -23,8 +26,12 @@ class _leilaoHomeState extends State<leilaoHome> {
   @override
   void initState() {
     super.initState();
+
+    token = Provider.of<AuthProvider>(context, listen: false).token;
+    //token = TokenStorageService().getToken() as String;
+    print("print do token " + token);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<ProductProvider>(context, listen: false).initialize();
+      Provider.of<ProductProvider>(context, listen: false).initialize(token);
     });
   }
 
@@ -70,19 +77,13 @@ class _leilaoHomeState extends State<leilaoHome> {
         actions: [
           PopupMenuButton<String>(
             onSelected: (value) {
-              final authorization =
-                  Provider.of<ProductProvider>(
-                    context,
-                    listen: false,
-                  ).authorization;
               switch (value) {
                 case 'add_product':
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder:
-                          (context) =>
-                              AddProductScreen(authorization: authorization),
+                          (context) => AddProductScreen(authorization: token),
                     ),
                   );
                   break;
@@ -91,8 +92,7 @@ class _leilaoHomeState extends State<leilaoHome> {
                     context,
                     MaterialPageRoute(
                       builder:
-                          (context) =>
-                              AddCompanyScreen(authorization: authorization),
+                          (context) => AddCompanyScreen(authorization: token),
                     ),
                   );
                   break;
@@ -150,7 +150,7 @@ class _leilaoHomeState extends State<leilaoHome> {
           }
 
           final productList = productProvider.products;
-          final authorization = productProvider.authorization;
+          //final authorization = productProvider.authorization;
 
           return SingleChildScrollView(
             child: Column(
@@ -215,7 +215,7 @@ class _leilaoHomeState extends State<leilaoHome> {
                                 return FutureBuilder<List<PriceList>>(
                                   future: priceProvider.getProductPrices(
                                     _filteredProducts[index].id,
-                                    authorization,
+                                    token,
                                   ),
                                   builder: (context, snapshot) {
                                     String priceText = "";
@@ -253,8 +253,9 @@ class _leilaoHomeState extends State<leilaoHome> {
                                                       _filteredProducts[index]
                                                           .id
                                                           .toString(),
-                                                  authorization: authorization,
-                                                  img_url: _filteredProducts[index].img_url,
+                                                  img_url:
+                                                      _filteredProducts[index]
+                                                          .img_url,
                                                 ),
                                           ),
                                         );
@@ -366,7 +367,7 @@ class _leilaoHomeState extends State<leilaoHome> {
                                 return FutureBuilder<List<PriceList>>(
                                   future: priceProvider.getProductPrices(
                                     saleProducts[index].id,
-                                    authorization,
+                                    token,
                                   ),
                                   builder: (context, snapshot) {
                                     String priceText = "";
@@ -408,8 +409,6 @@ class _leilaoHomeState extends State<leilaoHome> {
                                                             saleProducts[index]
                                                                 .id
                                                                 .toString(),
-                                                        authorization:
-                                                            authorization,
                                                         img_url:
                                                             saleProducts[index]
                                                                 .img_url,
@@ -523,7 +522,7 @@ class _leilaoHomeState extends State<leilaoHome> {
                                 return FutureBuilder<List<PriceList>>(
                                   future: priceProvider.getProductPrices(
                                     listProducts[index].id,
-                                    authorization,
+                                    token,
                                   ),
                                   builder: (context, snapshot) {
                                     String priceText = "";
@@ -560,7 +559,6 @@ class _leilaoHomeState extends State<leilaoHome> {
                                                   id:
                                                       listProducts[index].id
                                                           .toString(),
-                                                  authorization: authorization,
                                                   img_url:
                                                       listProducts[index]
                                                           .img_url,

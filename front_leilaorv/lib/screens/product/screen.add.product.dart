@@ -65,8 +65,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
       });
 
       try {
+
+        
+
         await _productService.addProduct(
-          widget.authorization,
+           widget.authorization,
           _nameController.text,
           _markController.text,
           _weightController.text,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front_leilaorv/data/providers/auth.provider.dart';
 import 'package:provider/provider.dart';
 import 'package:front_leilaorv/data/providers/product.provider.dart';
 import 'product/screen.pricelist.product.dart';
@@ -15,8 +16,10 @@ class _leilaoHomeState extends State<leilaoHome> {
   void initState() {
     super.initState();
     // Inicializa os dados quando o widget é criado
+    final token = Provider.of<AuthProvider>(context, listen: false).token;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<ProductProvider>(context, listen: false).initialize();
+      Provider.of<ProductProvider>(context, listen: false).initialize(token);
     });
   }
 
@@ -45,8 +48,7 @@ class _leilaoHomeState extends State<leilaoHome> {
             return const Center(child: Text('Sem dados produtos'));
           }
 
-          final productList = productProvider.products;
-          final authorization = productProvider.authorization;
+          final productList = productProvider.products;         
 
           return SingleChildScrollView(
             child: Column(
@@ -75,8 +77,7 @@ class _leilaoHomeState extends State<leilaoHome> {
                               MaterialPageRoute(
                                 builder:
                                     (context) => product_priceList(
-                                      id: saleProducts[index].id.toString(),
-                                      authorization: authorization,
+                                      id: saleProducts[index].id.toString(),                                     
                                       img_url: saleProducts[index].img_url,
                                     ),
                               ),
@@ -150,8 +151,7 @@ class _leilaoHomeState extends State<leilaoHome> {
                             MaterialPageRoute(
                               builder:
                                   (context) => product_priceList(
-                                    id: listProducts[index].id.toString(),
-                                    authorization: authorization,
+                                    id: listProducts[index].id.toString(),                                    
                                     img_url: listProducts[index].img_url,
                                   ),
                             ),
