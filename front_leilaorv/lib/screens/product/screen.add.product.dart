@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:front_leilaorv/service/services.product.dart';
 
 class AddProductScreen extends StatefulWidget {
   final String authorization;
 
-  const AddProductScreen({Key? key, required this.authorization}) : super(key: key);
+  const AddProductScreen({Key? key, required this.authorization})
+    : super(key: key);
 
   @override
   State<AddProductScreen> createState() => _AddProductScreenState();
@@ -18,10 +20,35 @@ class _AddProductScreenState extends State<AddProductScreen> {
   String? _selectedMeasure;
   bool _isSale = false;
   bool _isLoading = false;
-  String? _imageFile;
+  XFile? _pickedFile;
+  String? _imageUrl;
+
+  final ImagePicker _picker = ImagePicker();
 
   final List<String> _measureOptions = ['kg', 'g', 'L', 'ml', 'unidade'];
   final ProductService _productService = ProductService();
+
+  Future<void> _pickImage() async {
+    try {
+      final XFile? pickedFile = await _picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 800,
+        maxHeight: 800,
+        imageQuality: 85,
+      );
+
+      if (pickedFile != null) {
+        setState(() {
+          _pickedFile = pickedFile;
+          _imageUrl = pickedFile.path;
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao selecionar imagem: $e'))
+      );
+    }
+  }
 
   @override
   void dispose() {
@@ -38,13 +65,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
       });
 
       try {
+
+        
+
         await _productService.addProduct(
-          widget.authorization,
+           widget.authorization,
           _nameController.text,
           _markController.text,
           _weightController.text,
           _selectedMeasure!,
           _isSale,
+          _pickedFile,
         );
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -53,7 +84,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         Navigator.pop(context);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro: $e')),
+          SnackBar(content: Text('Erro: $e'))
         );
       } finally {
         setState(() {
@@ -91,17 +122,20 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           border: Border.all(color: Colors.grey),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: _imageFile != null
-                            ? Image.network(_imageFile!)
+                        child: _imageUrl != null
+                            ? Image.network(_imageUrl!, fit: BoxFit.cover)
                             : const Center(child: Text('Selecione uma imagem')),
                       ),
                       const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Implementar seleção de imagem
-                        },
-                        child: const Text('Escolher Imagem'),
+                      ElevatedButton.icon(
+                        onPressed: _pickImage,
+                        icon: const Icon(Icons.image),
+                        label: const Text('Escolher Imagem'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                        ),
                       ),
+
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: _nameController,
@@ -203,7 +237,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ),
                 child: _isLoading
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text('SALVAR PRODUTO', style: TextStyle(fontSize: 16)),
+                    : const Text(
+                        'SALVAR PRODUTO',
+                        style: TextStyle(fontSize: 16),
+                      ),
               ),
             ],
           ),

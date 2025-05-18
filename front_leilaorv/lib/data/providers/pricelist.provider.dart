@@ -10,6 +10,9 @@ class PriceListProvider with ChangeNotifier {
   final PriceListService _priceListService = PriceListService();
 
   Map<int, List<PriceList>> get productPrices => _productPrices;
+
+
+  
   bool isLoadingFor(int productId) => _loadingStates[productId] ?? false;
   String? get error => _error;
 

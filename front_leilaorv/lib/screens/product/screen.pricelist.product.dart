@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:front_leilaorv/data/providers/auth.provider.dart';
 import 'package:front_leilaorv/models/pricelist.dart';
 import 'package:front_leilaorv/service/services.pricelist.dart';
+import 'package:provider/provider.dart';
 import './screen.addprice.product.dart';
 
 class product_priceList extends StatefulWidget {
   final String id;
-  final String authorization;
   final String? img_url;
+  
 
   const product_priceList({
     super.key,
-    required this.id,
-    required this.authorization,
+    required this.id,   
     this.img_url,
   });
   @override
@@ -24,21 +25,22 @@ class _product_priceList extends State<product_priceList> {
   late Future<List<PriceList>> _priceListFuture;
   PriceListService _priceListService = PriceListService();
 
-  late String authorization;
+  late String token;
+
   late String id;
   late String imgUrl;
 
   @override
   void initState() {
+    super.initState();
     id = widget.id;
-    authorization = widget.authorization;
     imgUrl = widget.img_url!;
+    token = Provider.of<AuthProvider>(context, listen: false).token;
 
     _priceListFuture = _priceListService.getAllPriceListId(
       int.parse(id),
-      authorization,
+      token,
     );
-    super.initState();
   }
 
   @override
@@ -55,12 +57,12 @@ class _product_priceList extends State<product_priceList> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
-          if (snapshot.hasError) {
+          /* if (snapshot.hasError) {
             return Text("Erro : ${snapshot.error}");
           }
           if (!snapshot.hasData) {
             return Text("Sem dados price list");
-          }
+          }*/
           final priceList = snapshot.data;
 
           return SingleChildScrollView(
@@ -91,7 +93,7 @@ class _product_priceList extends State<product_priceList> {
                                   builder:
                                       (context) => AddPriceScreen(
                                         productId: id,
-                                        authorization: authorization,
+                                        authorization: token,
                                         productName:
                                             priceList?.isNotEmpty == true
                                                 ? priceList![0].product.name
@@ -107,7 +109,7 @@ class _product_priceList extends State<product_priceList> {
                                   _priceListFuture = _priceListService
                                       .getAllPriceListId(
                                         int.parse(id),
-                                        authorization,
+                                        token,
                                       );
                                 });
                               }
@@ -123,7 +125,7 @@ class _product_priceList extends State<product_priceList> {
                         height: 690,
                         width: 600,
                         child: ListView.builder(
-                          itemCount: priceList?.length,
+                          itemCount: priceList?.length ?? 0,
                           itemBuilder: (context, index) {
                             return Card(
                               margin: const EdgeInsets.symmetric(
@@ -166,32 +168,12 @@ class _product_priceList extends State<product_priceList> {
 
                                     Row(
                                       children: [
-                                        /* const Text(
-                                          'Quantidade: ',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),*/
                                         Text(
                                           '${priceList?[index].product.weigth} ${priceList?[index].product.unidade_measure}',
                                         ),
                                       ],
                                     ),
                                     const SizedBox(height: 4),
-
-                                    /*Row(
-                                      children: [
-                                        const Text(
-                                          'Marca: ',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          '${priceList?[index].product.mark}',
-                                        ),
-                                      ],
-                                    ),*/
                                   ],
                                 ),
                               ),
@@ -200,27 +182,6 @@ class _product_priceList extends State<product_priceList> {
                         ),
                       ),
                     ),
-
-                    /*  Center(
-                      child: SizedBox(
-                        height: 690,
-                        width: 600,
-                        child: ListView.builder(
-                          itemCount: priceList?.length,
-                          itemBuilder: (context, index) {
-                            return Card(
-                              child: Column(
-                                children: [
-                                  Text(
-                                    ' ${priceList?[index].enterprise.name} \nR\$:${priceList?[index].price} \n${priceList?[index].product.weigth} : ${priceList?[index].product.unidade_measure} \n${priceList?[index].product.mark}',
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),*/
                   ],
                 ),
               ),

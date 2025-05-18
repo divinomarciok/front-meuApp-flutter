@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:front_leilaorv/data/providers/auth.provider.dart';
+import 'package:front_leilaorv/service/service.token.storage.dart';
 import 'package:provider/provider.dart';
 import 'package:front_leilaorv/data/providers/product.provider.dart';
 import 'package:front_leilaorv/data/providers/pricelist.provider.dart';
@@ -16,6 +18,7 @@ class leilaoHome extends StatefulWidget {
 
 class _leilaoHomeState extends State<leilaoHome> {
   final TextEditingController _searchController = TextEditingController();
+  late String token;
   bool _isSearchVisible = false;
   List<dynamic> _filteredProducts = [];
   bool _isSearching = false;
@@ -23,9 +26,12 @@ class _leilaoHomeState extends State<leilaoHome> {
   @override
   void initState() {
     super.initState();
-    // Inicializa os dados quando o widget é criado
+
+    token = Provider.of<AuthProvider>(context, listen: false).token;
+    //token = TokenStorageService().getToken() as String;
+    print("print do token " + token);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<ProductProvider>(context, listen: false).initialize();
+      Provider.of<ProductProvider>(context, listen: false).initialize(token);
     });
   }
 
@@ -45,10 +51,12 @@ class _leilaoHomeState extends State<leilaoHome> {
     }
 
     final filtered =
-        products.where((product) {
-          return product.name.toLowerCase().contains(query.toLowerCase());
-          //  product.category.toLowerCase().contains(query.toLowerCase());
-        }).toList();
+        products
+            .where(
+              (product) =>
+                  product.name.toLowerCase().contains(query.toLowerCase()),
+            )
+            .toList();
 
     setState(() {
       _isSearching = true;
@@ -67,34 +75,24 @@ class _leilaoHomeState extends State<leilaoHome> {
         title: const Text('AUCTION RIO VERDE - GO'),
         backgroundColor: Colors.lightGreen,
         actions: [
-          // Menu de opções
           PopupMenuButton<String>(
             onSelected: (value) {
-              final authorization =
-                  Provider.of<ProductProvider>(
-                    context,
-                    listen: false,
-                  ).authorization;
-
               switch (value) {
                 case 'add_product':
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder:
-                          (context) =>
-                              AddProductScreen(authorization: authorization),
+                          (context) => AddProductScreen(authorization: token),
                     ),
                   );
-                  // Navegar para adicionar produto
                   break;
                 case 'add_company':
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder:
-                          (context) =>
-                              AddCompanyScreen(authorization: authorization),
+                          (context) => AddCompanyScreen(authorization: token),
                     ),
                   );
                   break;
@@ -144,17 +142,15 @@ class _leilaoHomeState extends State<leilaoHome> {
           if (productProvider.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
-
           if (productProvider.error != null) {
             return Center(child: Text('Erro: ${productProvider.error}'));
           }
-
           if (productProvider.products.isEmpty) {
             return const Center(child: Text('Sem dados produtos'));
           }
 
           final productList = productProvider.products;
-          final authorization = productProvider.authorization;
+          //final authorization = productProvider.authorization;
 
           return SingleChildScrollView(
             child: Column(
@@ -201,13 +197,13 @@ class _leilaoHomeState extends State<leilaoHome> {
                         GridView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: gridColumns,
-                            childAspectRatio:
-                                0.6, // Ajustado para dar mais espaço para o preço
-                            crossAxisSpacing: 5,
-                            mainAxisSpacing: 10,
-                          ),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: gridColumns,
+                                childAspectRatio: 0.6,
+                                crossAxisSpacing: 5,
+                                mainAxisSpacing: 10,
+                              ),
                           itemCount: _filteredProducts.length,
                           itemBuilder: (context, index) {
                             final fontSize =
@@ -219,11 +215,10 @@ class _leilaoHomeState extends State<leilaoHome> {
                                 return FutureBuilder<List<PriceList>>(
                                   future: priceProvider.getProductPrices(
                                     _filteredProducts[index].id,
-                                    authorization,
+                                    token,
                                   ),
                                   builder: (context, snapshot) {
                                     String priceText = "";
-
                                     if (snapshot.connectionState ==
                                         ConnectionState.done) {
                                       if (snapshot.hasData &&
@@ -242,7 +237,6 @@ class _leilaoHomeState extends State<leilaoHome> {
                                                       ? value
                                                       : element,
                                             );
-
                                         priceText =
                                             "R\$ ${lowestPrice.toStringAsFixed(2)}";
                                       }
@@ -259,7 +253,6 @@ class _leilaoHomeState extends State<leilaoHome> {
                                                       _filteredProducts[index]
                                                           .id
                                                           .toString(),
-                                                  authorization: authorization,
                                                   img_url:
                                                       _filteredProducts[index]
                                                           .img_url,
@@ -374,7 +367,7 @@ class _leilaoHomeState extends State<leilaoHome> {
                                 return FutureBuilder<List<PriceList>>(
                                   future: priceProvider.getProductPrices(
                                     saleProducts[index].id,
-                                    authorization,
+                                    token,
                                   ),
                                   builder: (context, snapshot) {
                                     String priceText = "";
@@ -416,8 +409,6 @@ class _leilaoHomeState extends State<leilaoHome> {
                                                             saleProducts[index]
                                                                 .id
                                                                 .toString(),
-                                                        authorization:
-                                                            authorization,
                                                         img_url:
                                                             saleProducts[index]
                                                                 .img_url,
@@ -518,7 +509,7 @@ class _leilaoHomeState extends State<leilaoHome> {
                                 mainAxisSpacing: 10,
                               ),
                           itemCount:
-                              productList.length > 16 ? 16 : productList.length,
+                              productList.length > 18 ? 18 : productList.length,
                           itemBuilder: (context, index) {
                             final fontSize =
                                 MediaQuery.of(context).size.width < 800
@@ -531,11 +522,10 @@ class _leilaoHomeState extends State<leilaoHome> {
                                 return FutureBuilder<List<PriceList>>(
                                   future: priceProvider.getProductPrices(
                                     listProducts[index].id,
-                                    authorization,
+                                    token,
                                   ),
                                   builder: (context, snapshot) {
                                     String priceText = "";
-
                                     if (snapshot.connectionState ==
                                         ConnectionState.done) {
                                       if (snapshot.hasData &&
@@ -554,7 +544,6 @@ class _leilaoHomeState extends State<leilaoHome> {
                                                       ? value
                                                       : element,
                                             );
-
                                         priceText =
                                             "R\$ ${lowestPrice.toStringAsFixed(2)}";
                                       }
@@ -570,7 +559,6 @@ class _leilaoHomeState extends State<leilaoHome> {
                                                   id:
                                                       listProducts[index].id
                                                           .toString(),
-                                                  authorization: authorization,
                                                   img_url:
                                                       listProducts[index]
                                                           .img_url,
@@ -596,7 +584,6 @@ class _leilaoHomeState extends State<leilaoHome> {
                                                   context,
                                                   constraints,
                                                 ) {
-                                                  // Ajusta o tamanho da fonte com base no espaço disponível
                                                   final double availableHeight =
                                                       constraints.maxHeight;
                                                   final double textSize =
@@ -648,44 +635,6 @@ class _leilaoHomeState extends State<leilaoHome> {
                                                 },
                                               ),
                                             ),
-
-                                            /* Expanded(
-                                              child: Center(
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      "${listProducts[index].name} ${listProducts[index].mark} \n ${listProducts[index].weigth} ${listProducts[index].unidade_measure}",
-                                                      style: TextStyle(
-                                                        fontSize: fontSize,
-                                                      ),
-                                                      maxLines: 3,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
-                                                    if (priceText.isNotEmpty)
-                                                      FittedBox(
-                                                        fit: BoxFit.scaleDown,
-                                                        child: Text(
-                                                          priceText,
-                                                          style:
-                                                              const TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                color:
-                                                                    Colors
-                                                                        .green,
-                                                              ),
-                                                        ),
-                                                      ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),*/
                                           ],
                                         ),
                                       ),
