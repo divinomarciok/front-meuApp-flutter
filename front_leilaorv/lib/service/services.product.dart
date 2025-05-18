@@ -1,42 +1,29 @@
-import 'dart:convert';
-
-import 'package:front_leilaorv/models/products.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
+import '../models/products.dart';
 
 class ProductService {
+  final String baseUrl = 'http://localhost:8000/api';
+
   Future<List<Product>> getAllProduct(String authorization) async {
-    try {
-      var headers = {'Authorization': 'Bearer $authorization'};
+    var headers = {'Authorization': 'Bearer $authorization'};
+    var dio = Dio();
+    var response = await dio.request(
+      'http://localhost:8000/api/products',
+      options: Options(method: 'GET', headers: headers),
+    );
 
-      var dio = Dio();
-      var response = await dio.request(
-        'http://localhost:8000/api/products',
-        options: Options(method: 'GET', headers: headers),
-      );
-
-      if (response.statusCode == 200) {
-        print(response.data);
-        List<Product> productList =
-            (response.data as List)
-                .map((item) => Product.fromJson(item))
-                .toList();
-
-        return productList;
-      } else {
-        print(response.statusMessage);
-        throw Exception('Falha em carregar as produtos');
-      }
-    } catch (e) {
-      print('Erro na requisição: $e');
-      if (e is DioException) {
-        print('DioError: ${e.message}');
-        print('Response: ${e.response?.data}');
-      }
-      throw Exception('Falha ao carregar os produtos: $e');
+    if (response.statusCode == 200) {
+      List<Product> products =
+          (response.data as List)
+              .map((item) => Product.fromJson(item))
+              .toList();
+      return products;
+    } else {
+      throw Exception('Falha ao carregar produtos');
     }
   }
-
-  // Adicione este método ao seu ProductService existente
 
   Future<Product> addProduct(
     String authorization,
@@ -45,40 +32,71 @@ class ProductService {
     String weight,
     String unitMeasure,
     bool isSale,
-    // Adicione parâmetros para imagem se necessário
+    XFile? pickedFile,
   ) async {
-    var headers =  {'Authorization': 'Bearer $authorization'};
-   
-    var data = FormData.fromMap({
-      'files': [
-        await MultipartFile.fromFile(
-          '/C:/Users/divin/OneDrive/Desktop/imagens/cerveja heineken long neck 330ml.jpg',
-          filename:
-              '/C:/Users/divin/OneDrive/Desktop/imagens/cerveja heineken long neck 330ml.jpg',
-        ),
-      ],
-      'name': 'Longneck Heineken 330ml',
-      'mark': 'Heineken ',
-      'category': '6',
-      'description': 'Bebida alcolica',
-      'unidade_measure': 'L',
-      'weigth': '0.330',
-    });
-
     var dio = Dio();
-    var response = await dio.request(
-      'http://localhost:8000/api/products',
-      options: Options(method: 'POST', headers: headers),
-      data: data,
-    );
 
-    if (response.statusCode == 200) {
-      print(json.encode(response.data));
-      return response.data;
-    } else {
-      print(response.statusMessage);
-      throw Exception('Falha ao criar o produto ');
+    try {
+      FormData formData;
 
+      if (pickedFile != null) {
+        // Lê o arquivo como bytes
+        List<int> bytes = await pickedFile.readAsBytes();
+        print("Enviando imagem: ${pickedFile.name}");
+        print("Tamanho da imagem em bytes: ${bytes.length}");
+
+        // Determina o tipo MIME com base na extensão do arquivo
+        String mimeType = 'image/jpeg'; // Padrão
+        if (pickedFile.name.endsWith('.png')) mimeType = 'image/png';
+        if (pickedFile.name.endsWith('.gif')) mimeType = 'image/gif';
+        if (pickedFile.name.endsWith('.webp')) mimeType = 'image/webp';
+        if (pickedFile.name.endsWith('.jpg')) mimeType = 'image/jpg';
+        formData = FormData.fromMap({
+          'name': name,
+          'mark': mark,
+          'weigth': weight,
+          'unidade_measure': unitMeasure,
+          'is_sale': isSale ? 1 : 0, // Convertendo para número
+          // Use 'image' como nome do campo para corresponder ao esperado pelo multer
+          'image': await MultipartFile.fromBytes(
+            bytes,
+            filename: pickedFile.name,
+            contentType: MediaType.parse(mimeType),
+          ),
+        });
+      } else {
+        formData = FormData.fromMap({
+          'name': name,
+          'mark': mark,
+          'weigth': weight,
+          'unidade_measure': unitMeasure,
+          'is_sale': isSale ? 1 : 0,
+        });
+      }
+
+      var response = await dio.post(
+        'http://localhost:8000/api/products',
+        data: formData,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $authorization',
+            // Remova o Content-Type para que o Dio defina automaticamente
+          },
+          validateStatus: (status) => status! < 500, // Para capturar erros 4xx
+        ),
+      );
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        return Product.fromJson(response.data);
+      } else {
+        print('Resposta do servidor: ${response.data}');
+        throw Exception(
+          'Falha ao adicionar produto: ${response.statusCode} - ${response.statusMessage}',
+        );
+      }
+    } catch (e) {
+      print('Erro detalhado: $e');
+      throw Exception('Erro ao adicionar produto: $e');
     }
   }
 }

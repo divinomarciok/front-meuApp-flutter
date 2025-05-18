@@ -23,7 +23,6 @@ class _leilaoHomeState extends State<leilaoHome> {
   @override
   void initState() {
     super.initState();
-    // Inicializa os dados quando o widget é criado
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ProductProvider>(context, listen: false).initialize();
     });
@@ -45,10 +44,12 @@ class _leilaoHomeState extends State<leilaoHome> {
     }
 
     final filtered =
-        products.where((product) {
-          return product.name.toLowerCase().contains(query.toLowerCase());
-          //  product.category.toLowerCase().contains(query.toLowerCase());
-        }).toList();
+        products
+            .where(
+              (product) =>
+                  product.name.toLowerCase().contains(query.toLowerCase()),
+            )
+            .toList();
 
     setState(() {
       _isSearching = true;
@@ -67,7 +68,6 @@ class _leilaoHomeState extends State<leilaoHome> {
         title: const Text('AUCTION RIO VERDE - GO'),
         backgroundColor: Colors.lightGreen,
         actions: [
-          // Menu de opções
           PopupMenuButton<String>(
             onSelected: (value) {
               final authorization =
@@ -75,7 +75,6 @@ class _leilaoHomeState extends State<leilaoHome> {
                     context,
                     listen: false,
                   ).authorization;
-
               switch (value) {
                 case 'add_product':
                   Navigator.push(
@@ -86,7 +85,6 @@ class _leilaoHomeState extends State<leilaoHome> {
                               AddProductScreen(authorization: authorization),
                     ),
                   );
-                  // Navegar para adicionar produto
                   break;
                 case 'add_company':
                   Navigator.push(
@@ -144,11 +142,9 @@ class _leilaoHomeState extends State<leilaoHome> {
           if (productProvider.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
-
           if (productProvider.error != null) {
             return Center(child: Text('Erro: ${productProvider.error}'));
           }
-
           if (productProvider.products.isEmpty) {
             return const Center(child: Text('Sem dados produtos'));
           }
@@ -201,13 +197,13 @@ class _leilaoHomeState extends State<leilaoHome> {
                         GridView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: gridColumns,
-                            childAspectRatio:
-                                0.6, // Ajustado para dar mais espaço para o preço
-                            crossAxisSpacing: 5,
-                            mainAxisSpacing: 10,
-                          ),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: gridColumns,
+                                childAspectRatio: 0.6,
+                                crossAxisSpacing: 5,
+                                mainAxisSpacing: 10,
+                              ),
                           itemCount: _filteredProducts.length,
                           itemBuilder: (context, index) {
                             final fontSize =
@@ -223,7 +219,6 @@ class _leilaoHomeState extends State<leilaoHome> {
                                   ),
                                   builder: (context, snapshot) {
                                     String priceText = "";
-
                                     if (snapshot.connectionState ==
                                         ConnectionState.done) {
                                       if (snapshot.hasData &&
@@ -242,7 +237,6 @@ class _leilaoHomeState extends State<leilaoHome> {
                                                       ? value
                                                       : element,
                                             );
-
                                         priceText =
                                             "R\$ ${lowestPrice.toStringAsFixed(2)}";
                                       }
@@ -260,9 +254,7 @@ class _leilaoHomeState extends State<leilaoHome> {
                                                           .id
                                                           .toString(),
                                                   authorization: authorization,
-                                                  img_url:
-                                                      _filteredProducts[index]
-                                                          .img_url,
+                                                  img_url: _filteredProducts[index].img_url,
                                                 ),
                                           ),
                                         );
@@ -518,7 +510,7 @@ class _leilaoHomeState extends State<leilaoHome> {
                                 mainAxisSpacing: 10,
                               ),
                           itemCount:
-                              productList.length > 16 ? 16 : productList.length,
+                              productList.length > 18 ? 18 : productList.length,
                           itemBuilder: (context, index) {
                             final fontSize =
                                 MediaQuery.of(context).size.width < 800
@@ -535,7 +527,6 @@ class _leilaoHomeState extends State<leilaoHome> {
                                   ),
                                   builder: (context, snapshot) {
                                     String priceText = "";
-
                                     if (snapshot.connectionState ==
                                         ConnectionState.done) {
                                       if (snapshot.hasData &&
@@ -554,7 +545,6 @@ class _leilaoHomeState extends State<leilaoHome> {
                                                       ? value
                                                       : element,
                                             );
-
                                         priceText =
                                             "R\$ ${lowestPrice.toStringAsFixed(2)}";
                                       }
@@ -596,7 +586,6 @@ class _leilaoHomeState extends State<leilaoHome> {
                                                   context,
                                                   constraints,
                                                 ) {
-                                                  // Ajusta o tamanho da fonte com base no espaço disponível
                                                   final double availableHeight =
                                                       constraints.maxHeight;
                                                   final double textSize =
@@ -648,44 +637,6 @@ class _leilaoHomeState extends State<leilaoHome> {
                                                 },
                                               ),
                                             ),
-
-                                            /* Expanded(
-                                              child: Center(
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      "${listProducts[index].name} ${listProducts[index].mark} \n ${listProducts[index].weigth} ${listProducts[index].unidade_measure}",
-                                                      style: TextStyle(
-                                                        fontSize: fontSize,
-                                                      ),
-                                                      maxLines: 3,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
-                                                    if (priceText.isNotEmpty)
-                                                      FittedBox(
-                                                        fit: BoxFit.scaleDown,
-                                                        child: Text(
-                                                          priceText,
-                                                          style:
-                                                              const TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                color:
-                                                                    Colors
-                                                                        .green,
-                                                              ),
-                                                        ),
-                                                      ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),*/
                                           ],
                                         ),
                                       ),

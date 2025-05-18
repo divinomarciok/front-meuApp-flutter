@@ -9,6 +9,7 @@ class PriceListService {
     int id,
     String authorization,
   ) async {
+    List<PriceList> pricelistId = [];
     var headers = {'Authorization': 'Beraer $authorization'};
     var dio = Dio();
     late Future<List<PriceList>> pricelistNull = Future.value([]);
@@ -16,20 +17,22 @@ class PriceListService {
       'http://localhost:8000/api/pricelists/product/$id',
       options: Options(method: 'GET', headers: headers),
     );
-
     if (response.statusCode == 200) {
       print(json.encode(response.data));
 
-      List<PriceList> pricelistId =
-          (response.data as List)
-              .map((item) => PriceList.fromJson(item))
-              .toList();
-
+      if (response.data is List) {
+        pricelistId =
+            (response.data as List)
+                .map((item) => PriceList.fromJson(item))
+                .toList();
+      } else {
+        pricelistId = [];
+      }
       return pricelistId;
     } else {
       //throw Exception('Falha em carregar as price list');
       print("Produto sem dados de preço");
-      return pricelistNull;
+      return pricelistId; 
     }
   }
 

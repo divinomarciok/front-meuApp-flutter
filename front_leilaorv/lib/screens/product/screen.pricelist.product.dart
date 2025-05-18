@@ -55,12 +55,12 @@ class _product_priceList extends State<product_priceList> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
-          if (snapshot.hasError) {
+          /* if (snapshot.hasError) {
             return Text("Erro : ${snapshot.error}");
           }
           if (!snapshot.hasData) {
             return Text("Sem dados price list");
-          }
+          }*/
           final priceList = snapshot.data;
 
           return SingleChildScrollView(
@@ -123,7 +123,7 @@ class _product_priceList extends State<product_priceList> {
                         height: 690,
                         width: 600,
                         child: ListView.builder(
-                          itemCount: priceList?.length,
+                          itemCount: priceList?.length ?? 0,
                           itemBuilder: (context, index) {
                             return Card(
                               margin: const EdgeInsets.symmetric(
@@ -166,32 +166,12 @@ class _product_priceList extends State<product_priceList> {
 
                                     Row(
                                       children: [
-                                        /* const Text(
-                                          'Quantidade: ',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),*/
                                         Text(
                                           '${priceList?[index].product.weigth} ${priceList?[index].product.unidade_measure}',
                                         ),
                                       ],
                                     ),
                                     const SizedBox(height: 4),
-
-                                    /*Row(
-                                      children: [
-                                        const Text(
-                                          'Marca: ',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          '${priceList?[index].product.mark}',
-                                        ),
-                                      ],
-                                    ),*/
                                   ],
                                 ),
                               ),
@@ -200,27 +180,6 @@ class _product_priceList extends State<product_priceList> {
                         ),
                       ),
                     ),
-
-                    /*  Center(
-                      child: SizedBox(
-                        height: 690,
-                        width: 600,
-                        child: ListView.builder(
-                          itemCount: priceList?.length,
-                          itemBuilder: (context, index) {
-                            return Card(
-                              child: Column(
-                                children: [
-                                  Text(
-                                    ' ${priceList?[index].enterprise.name} \nR\$:${priceList?[index].price} \n${priceList?[index].product.weigth} : ${priceList?[index].product.unidade_measure} \n${priceList?[index].product.mark}',
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),*/
                   ],
                 ),
               ),
